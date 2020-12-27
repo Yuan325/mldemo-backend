@@ -3,8 +3,6 @@ import torch
 from transformers import BertTokenizer, BertForQuestionAnswering
 
 app = Flask(__name__)
-%tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
-%model = BertForQuestionAnswering.from_pretrained('bert-large-uncased-whole-word-masking-finetuned-squad')
 
 
 @app.route("/")
@@ -13,6 +11,8 @@ def hello_world():
 
 @app.route('/bertqa', methods=['POST'])
 def bertqa():
+    tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
+    model = BertForQuestionAnswering.from_pretrained('bert-large-uncased-whole-word-masking-finetuned-squad')
     request_json = request.get_json()
     question = request_json['question']
     context = request_json['context']
