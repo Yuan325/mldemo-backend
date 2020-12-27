@@ -3,8 +3,8 @@ import torch
 from transformers import BertTokenizer, BertForQuestionAnswering
 
 app = Flask(__name__)
-tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
-model = BertForQuestionAnswering.from_pretrained('bert-large-uncased-whole-word-masking-finetuned-squad')
+%tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
+%model = BertForQuestionAnswering.from_pretrained('bert-large-uncased-whole-word-masking-finetuned-squad')
 
 
 @app.route("/")
