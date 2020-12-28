@@ -1,8 +1,10 @@
 from flask import Flask, request
 import torch
 from transformers import BertTokenizer, BertForQuestionAnswering
+from flask_cors import CORS
 
 app = Flask(__name__)
+CORS(app)
 tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
 model = BertForQuestionAnswering.from_pretrained('mrm8488/bert-medium-finetuned-squadv2')
 
@@ -29,7 +31,7 @@ def bertqa():
     all_tokens = tokenizer.convert_ids_to_tokens(inputs.input_ids[0])
     ans_string = ' '.join(all_tokens[torch.argmax(start_scores) : torch.argmax(end_scores)+1]).replace("[CLS]", "").replace("[SEP]","").replace(" ##","")
 
-    return ans_string
+    return { 'answer': ans_string }
 
 if __name__ == "__main__":
     app.run(debug=True)
