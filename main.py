@@ -5,19 +5,12 @@ from flask_cors import CORS
 
 app = Flask(__name__)
 CORS(app)
-tokenizer = None 
-model = None
-
+tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
+model = BertForQuestionAnswering.from_pretrained('mrm8488/bert-medium-finetuned-squadv2')
 
 @app.route("/")
 def hello_world():
   return "Hello, World!"
-
-@app.route('/bertqastart')
-def startbertqa():
-    tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
-    model = BertForQuestionAnswering.from_pretrained('mrm8488/bert-medium-finetuned-squadv2')
-    return "done"
 
 @app.route('/bertqa', methods=['POST'])
 def bertqa():
