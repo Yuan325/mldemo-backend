@@ -17,6 +17,7 @@ def hello_world():
 def startbertqa():
     tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
     model = BertForQuestionAnswering.from_pretrained('mrm8488/bert-medium-finetuned-squadv2')
+    return "done"
 
 @app.route('/bertqa', methods=['POST'])
 def bertqa():
