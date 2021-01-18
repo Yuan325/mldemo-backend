@@ -1,6 +1,6 @@
 from flask import Flask, request
 import torch
-from transformers import BertTokenizer, BertForQuestionAnswering
+from transformers import BertTokenizer, BertForQuestionAnswering, BertTokenizerFast, EncoderDecoderModel
 from flask_cors import CORS
 
 app = Flask(__name__)
@@ -31,6 +31,20 @@ def bertqa():
     ans_string = ' '.join(all_tokens[torch.argmax(start_scores) : torch.argmax(end_scores)+1]).replace("[CLS]", "").replace("[SEP]","").replace(" ##","")
 
     return { 'answer': ans_string }
+
+@app.route('/bertsum', methods=['POST'])
+def bertsum():
+    tokenizer = BertTokenizerFast.from_pretrained('mrm8488/bert-small2bert-small-finetuned-cnn_daily_mail-summarization')
+    model = EncoderDecoderModel.from_pretrained('mrm8488/bert-small2bert-small-finetuned-cnn_daily_mail-summarization')
+    request_json = request.get_json()
+    text = request_json['context']
+    inputs = tokenizer([text], padding="max_length", truncation=True, max_length=512, return_tensors="pt")
+    input_ids = inputs.input_ids
+    attention_mask = inputs.attention_mask
+    output = model.generate(input_ids, attention_mask=attention_mask)
+
+    return tokenizer.decode(output[0], skip_special_tokens=True)
+
 
 if __name__ == "__main__":
     app.run(debug=True)
